@@ -3,12 +3,19 @@ package com.mathilde.foodvisor.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.mathilde.foodvisor.R
+import com.mathilde.foodvisor.network.api.RetrofitClient
+import com.mathilde.foodvisor.db.model.Food
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,6 +51,25 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val request = RetrofitClient.getAPIService().getFoodList("bar")
+
+        request.enqueue(object : Callback<List<Food>> {
+            override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
+                response?.body()?.forEach {
+                    Log.d("The food: " , it.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<List<Food>>?, t: Throwable?) {
+                Log.d("onFailure", call?.request()?.body().toString())
+                Log.d("onFailure", t?.message)
+            }
+        })
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
