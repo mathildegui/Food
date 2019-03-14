@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitClient {
     companion object {
         fun getAPIService() : Service = Retrofit.Builder()
-            .baseUrl("https://foodvisor.io/")
+            .baseUrl("https://foodvisor.io/itw/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(Service::class.java)

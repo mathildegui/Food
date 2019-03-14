@@ -8,19 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.mathilde.foodvisor.R
 import com.mathilde.foodvisor.network.api.RetrofitClient
 import com.mathilde.foodvisor.db.model.Food
+import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -31,24 +31,18 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmenHometInteractionListener? = null
+class HomeFragment : Fragment(), FoodAdapter.OnFoodClickListener {
+    lateinit var foodAdapter: FoodAdapter
+    var foods: ArrayList<Food> = ArrayList()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+    override fun onFoodItemClick(position: Int, item: Food) {
+        //TODO
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private var listener: OnFragmenHometInteractionListener? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -57,11 +51,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val request = RetrofitClient.getAPIService().getFoodList("bar")
 
+        initAdapter()
+        initView()
+
         request.enqueue(object : Callback<List<Food>> {
             override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
-                response?.body()?.forEach {
-                    Log.d("The food: " , it.toString())
+                response?.body()?.let { foods.addAll(it)
+                Log.d("FOODS", foods.toString())
                 }
+                foodAdapter.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<List<Food>>?, t: Throwable?) {
@@ -69,10 +67,22 @@ class HomeFragment : Fragment() {
                 Log.d("onFailure", t?.message)
             }
         })
-
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private fun initAdapter() {
+        foodAdapter = context?.let { FoodAdapter( this.foods, it, this) }!!
+    }
+
+    private fun initView() {
+
+        recycler_view_food.apply {
+            addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = foodAdapter
+        }
+    }
+
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -82,7 +92,7 @@ class HomeFragment : Fragment() {
         if (context is OnFragmenHometInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmenHometInteractionListener")
+            throw RuntimeException("$context must implement OnFragmenHometInteractionListener")
         }
     }
 
@@ -103,7 +113,6 @@ class HomeFragment : Fragment() {
      * for more information.
      */
     interface OnFragmenHometInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -112,19 +121,9 @@ class HomeFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
          * @return A new instance of fragment HomeFragment.
          */
         @JvmStatic
-        fun newInstance() =
-            HomeFragment()
-
-                /*.apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }*/
+        fun newInstance() = HomeFragment()
     }
 }

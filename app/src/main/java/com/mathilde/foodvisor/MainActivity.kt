@@ -26,12 +26,10 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteraction
         when (item.itemId) {
             R.id.navigation_home -> {
                 addFragment(HomeFragment.newInstance())
-//                message.setText(R.string.title_home)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
                 addFragment(SearchFragment.newInstance("yo", "yu"))
-//                message.setText(R.string.title_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
         }
