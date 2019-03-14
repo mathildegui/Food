@@ -3,12 +3,19 @@ package com.mathilde.foodvisor.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.mathilde.foodvisor.R
+import com.mathilde.foodvisor.db.model.Food
+import com.mathilde.foodvisor.network.api.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,17 +32,26 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    var foods: ArrayList<Food> = ArrayList()
     private var listener: OnFragmentSearchInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        val request = RetrofitClient.getAPIService().getFoodList("bar")
+
+
+        request.enqueue(object : Callback<List<Food>> {
+            override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
+                response?.body()?.let { foods.addAll(it)
+                    getAllCombinaisons()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Food>>?, t: Throwable?) {
+                Log.d("onFailure", call?.request()?.body().toString())
+                Log.d("onFailure", t?.message)
+            }
+        })
     }
 
     override fun onCreateView(
@@ -44,6 +60,16 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    fun getAllCombinaisons () {
+        for (f in this.foods) {
+            Log.d(f.display_name,  f.type + " : " + f.cal.toString())
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

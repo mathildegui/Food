@@ -8,12 +8,6 @@
         tools:context=".ui.HomeFragment"
         android:layout_margin="16dp">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"
-            android:visibility="gone"/>
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_food"
             android:layout_width="0dp"
