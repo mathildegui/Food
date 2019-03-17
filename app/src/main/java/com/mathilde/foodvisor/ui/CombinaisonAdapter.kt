@@ -39,32 +39,34 @@ class CombinaisonAdapter (private var combinaisons:  HashMap<Float, Combinaison>
             percentage *= -1
         }
 
+        //TODO : Strings values depending on the locale
         when {
             percentage <= 0.1 -> {
-                holder.foodCalDiff.text = totalDiff.toString().plus(" calories au total, classement A")
-                holder.foodCalDiff.setTextColor(ContextCompat.getColor(context, R.color.green))
+                holder.foodRank.text = totalDiff.toString().plus(" calories au total, classement A")
+                holder.foodRank.setTextColor(ContextCompat.getColor(context, R.color.green))
             }
             percentage in 0.1..0.2  -> {
-                holder.foodCalDiff.text = totalDiff.toString().plus(" calories au total, classement B")
-                holder.foodCalDiff.setTextColor(ContextCompat.getColor(context, R.color.yellow))
+                holder.foodRank.text = totalDiff.toString().plus(" calories au total, classement B")
+                holder.foodRank.setTextColor(ContextCompat.getColor(context, R.color.yellow))
             }
             percentage in 0.2..0.3 -> {
-                holder.foodCalDiff.text = totalDiff.toString().plus(" calories au total, classement C")
-                holder.foodCalDiff.setTextColor(ContextCompat.getColor(context, R.color.orange))
+                holder.foodRank.text = totalDiff.toString().plus(" calories au total, classement C")
+                holder.foodRank.setTextColor(ContextCompat.getColor(context, R.color.orange))
             }
             percentage > 0.3-> {
-                holder.foodCalDiff.text = totalDiff.toString().plus(" calories au total, classement D")
-                holder.foodCalDiff.setTextColor(ContextCompat.getColor(context, R.color.red))
+                holder.foodRank.text = totalDiff.toString().plus(" calories au total, classement D")
+                holder.foodRank.setTextColor(ContextCompat.getColor(context, R.color.red))
             }
         }
 
+        //TODO : Strings values depending on the locale
         holder.starter.text = "Entrée: ".plus(combination.starter.display_name).plus(": ")
         holder.dish.text = "Plat: ".plus(combination.dish.display_name)
         holder.desert.text = "Dessert: ".plus(combination.desert.display_name)
     }
 
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val foodCalDiff: TextView = v.combinaison_item_total_diff
+        val foodRank: TextView = v.combinaison_item_rank
         val starter: TextView = v.combinaison_item_starter
         val dish: TextView = v.combinaison_item_dish
         val desert: TextView = v.combinaison_item_desert

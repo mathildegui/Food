@@ -17,12 +17,8 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [HomeFragment.OnFragmenHometInteractionListener] interface
- * to handle interaction events.
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
- *
  */
 class HomeFragment : Fragment(), FoodAdapter.OnFoodClickListener {
     lateinit var foodAdapter: FoodAdapter

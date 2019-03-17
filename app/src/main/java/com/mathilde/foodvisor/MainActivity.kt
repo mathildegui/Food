@@ -15,18 +15,7 @@ import com.mathilde.foodvisor.ui.SearchFragment
 import com.mathilde.foodvisor.viewModel.FoodViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteractionListener,
-    SearchFragment.OnFragmentSearchInteractionListener {
-    override fun onFragmenSearchtInteraction(uri: Uri) {
-
-    }
-
-    override fun onFragmentInteraction(uri: Uri) {
-
-    }
-
-//    private var content: FrameLayout? = null
-
+class MainActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
@@ -34,7 +23,7 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteraction
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                addFragment(SearchFragment.newInstance("yo", "yu"))
+                addFragment(SearchFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -53,9 +42,6 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteraction
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         addFragment(HomeFragment.newInstance())
-
-
-
     }
 
     /**

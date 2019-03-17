@@ -31,13 +31,14 @@ class FoodAdapter(private val foods: List<Food>, private val context: Context, p
     override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
         val food = foods[position]
 
-        holder.foodCal.text  = food.cal.toString()
+        //TODO : Strings values depending on the locale
+        holder.foodCal.text  = "Calories: ".plus(food.cal.toString())
         holder.foodName.text = food.display_name
-        holder.foodType.text = food.type
-        holder.foodCarbs.text = food.carbs.toString()
-        holder.foodFiber.text = food.fibers.toString()
-        holder.foodProteins.text = food.proteins.toString()
-        holder.foodLipids.text = food.lipids.toString()
+        holder.foodType.text = "Type: ".plus(food.type)
+        holder.foodCarbs.text = "Carbs: ".plus(food.carbs.toString())
+        holder.foodFiber.text = "Fibres: ".plus(food.fibers.toString())
+        holder.foodProteins.text = "Protéines: ".plus(food.proteins.toString())
+        holder.foodLipids.text = "Lipides: ".plus(food.lipids.toString())
         Picasso.get().load(food.imgUrl).into(holder.foodImg)
 
         holder.itemView.setOnClickListener {

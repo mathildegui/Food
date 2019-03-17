@@ -10,12 +10,14 @@
             android:id="@+id/search_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="How many calories" />
+            android:hint="Nombre de calories max" />
 
     <Button
             android:id="@+id/search_bt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="Rechercher"/>
 
     <androidx.recyclerview.widget.RecyclerView
