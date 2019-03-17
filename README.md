@@ -14,3 +14,4 @@ Ameliorations à prevoir
 1. Mettre un fichier de langue, en fonction de la locale utilisateur
 2. Ne pas utiliser androidX car c'est encore en beta
 3. Mettre des données en cache avec Room
+4. Ajouter des tests unitaires (Mockito) - UI tests (Espresso)
