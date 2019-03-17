@@ -2,12 +2,17 @@ package com.mathilde.foodvisor
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.FrameLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.mathilde.foodvisor.db.model.Food
 import com.mathilde.foodvisor.ui.HomeFragment
 import com.mathilde.foodvisor.ui.SearchFragment
+import com.mathilde.foodvisor.viewModel.FoodViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteractionListener,
@@ -43,6 +48,12 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteraction
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         addFragment(HomeFragment.newInstance())
+
+
+        val model = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        model.getFoods().observe(this, Observer<List<Food>>{ foods ->
+            Log.d("ViewModelProviders", foods.toString())
+        })
     }
 
     /**

@@ -24,13 +24,9 @@ class FoodAdapter(private val foods: List<Food>, private val context: Context, p
         fun onFoodItemClick(position: Int, item: Food)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_food, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_food, parent, false))
 
-    override fun getItemCount(): Int {
-        return foods.size
-    }
+    override fun getItemCount(): Int = foods.size
 
     override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
         val food = foods[position]

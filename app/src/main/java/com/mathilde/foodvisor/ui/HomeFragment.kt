@@ -56,9 +56,7 @@ class HomeFragment : Fragment(), FoodAdapter.OnFoodClickListener {
 
         request.enqueue(object : Callback<List<Food>> {
             override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
-                response?.body()?.let { foods.addAll(it)
-                Log.d("FOODS", foods.toString())
-                }
+                response?.body()?.let { foods.addAll(it) }
                 foodAdapter.notifyDataSetChanged()
             }
 
@@ -74,7 +72,6 @@ class HomeFragment : Fragment(), FoodAdapter.OnFoodClickListener {
     }
 
     private fun initView() {
-
         recycler_view_food.apply {
             addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             layoutManager = LinearLayoutManager(context)

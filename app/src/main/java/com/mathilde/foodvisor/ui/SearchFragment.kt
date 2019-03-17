@@ -7,11 +7,18 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.mathilde.foodvisor.R
+import com.mathilde.foodvisor.db.model.Combinaison
 import com.mathilde.foodvisor.db.model.Food
 import com.mathilde.foodvisor.network.api.RetrofitClient
+import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,27 +39,13 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class SearchFragment : Fragment() {
-    var foods: ArrayList<Food> = ArrayList()
+    lateinit var combinaisonAdapter: CombinaisonAdapter
+
+    var combinaisons: HashMap<Float, Combinaison> = HashMap()
+    var dishs: ArrayList<Food> = ArrayList()
+    var starters: ArrayList<Food> = ArrayList()
+    var deserts: ArrayList<Food> = ArrayList()
     private var listener: OnFragmentSearchInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val request = RetrofitClient.getAPIService().getFoodList("bar")
-
-
-        request.enqueue(object : Callback<List<Food>> {
-            override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
-                response?.body()?.let { foods.addAll(it)
-                    getAllCombinaisons()
-                }
-            }
-
-            override fun onFailure(call: Call<List<Food>>?, t: Throwable?) {
-                Log.d("onFailure", call?.request()?.body().toString())
-                Log.d("onFailure", t?.message)
-            }
-        })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,12 +57,61 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initAdapter()
+
+        val request = RetrofitClient.getAPIService().getFoodList("bar")
+        request.enqueue(object : Callback<List<Food>> {
+            override fun onResponse(call: Call<List<Food>>?, response: Response<List<Food>>?) {
+                response?.body()?.let {
+                    for (item in it) {
+                        when {
+                            item.type == "dish" -> dishs.add(item)
+                            item.type == "starter" -> starters.add(item)
+                            item.type == "desert" -> deserts.add(item)
+                        }
+                    }
+                    getAllCombinaisons()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Food>>?, t: Throwable?) {
+                Log.d("onFailure", call?.request()?.body().toString())
+                Log.d("onFailure", t?.message)
+            }
+        })
+
+        search_bt.setOnClickListener{
+            if(search_et.text.toString().isNotEmpty()) {
+                combinaisonAdapter.updateCals(search_et.text.toString().toFloat())
+                recycler_view_food.visibility = VISIBLE
+            }
+        }
+    }
+
+    private fun initAdapter() {
+        combinaisonAdapter = context?.let { CombinaisonAdapter( this.combinaisons, 45f, it) }!!
+        recycler_view_food.apply {
+            addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(false)
+            adapter = combinaisonAdapter
+        }
+        recycler_view_food.visibility = INVISIBLE
     }
 
     fun getAllCombinaisons () {
-        for (f in this.foods) {
-            Log.d(f.display_name,  f.type + " : " + f.cal.toString())
+        for (starter in this.starters) {
+            for (dish in this.dishs) {
+                for (desert in this.deserts) {
+                    val total = starter.cal + dish.cal + desert.cal
+                    this.combinaisons[total] = Combinaison(starter, dish, desert)
+                }
+            }
         }
+
+        this.combinaisons.toSortedMap()
+        combinaisonAdapter.notifyDataSetChanged()
     }
 
     // TODO: Rename method, update argument and hook method into UI event
