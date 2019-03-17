@@ -45,15 +45,17 @@ class MainActivity : AppCompatActivity(), HomeFragment.OnFragmenHometInteraction
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val model = ViewModelProviders.of(this).get(FoodViewModel::class.java)
+        model.getFoods().observe(this, Observer<List<Food>>{ foods ->
+            Log.d("ViewModelProviders", foods.toString())
+        })
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         addFragment(HomeFragment.newInstance())
 
 
-        val model = ViewModelProviders.of(this).get(FoodViewModel::class.java)
-        model.getFoods().observe(this, Observer<List<Food>>{ foods ->
-            Log.d("ViewModelProviders", foods.toString())
-        })
+
     }
 
     /**
